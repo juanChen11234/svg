@@ -1,0 +1,106 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Pasition - Path Transition with little JS code, render to anywhere.</title>
+</head>
+
+<body>
+
+<div style="display: none;">
+    <svg xmlns="http://www.w3.org/2000/svg">
+        <path id="pathA" d="M 10 10 L 390 10 L 390 390 L 10 390 z"></path>
+        <path id="pathB" d="M 200 30 L 370 370 L 30 370  z"></path>
+        <path id="pathC" d="M 10 10 L 390 10 L 390 390 L 10 390 z"></path>
+        <path id="pathD" d="M 200 30 L 370 370 L 30 370  z"></path>
+        <path id="pathE" d="M 10 10 L 390 10 L 390 390 L 10 390 z"></path>
+        <path id="pathF" d="M 200 30 L 370 370 L 30 370  z"></path>
+    </svg>
+
+</div>
+<div id="container">
+    <canvas id="canvas" width="400" height="400" style="border:2px solid #000"></canvas>
+</div>
+
+<script src="js/pasition.js"></script>
+<script>
+    function pa(){
+        var stroke = false;
+        stroke=true;
+
+        var pathA =  document.querySelector('#pathA').getAttribute('d'),
+                pathB=	document.querySelector('#pathB').getAttribute('d'),
+                pathC=	document.querySelector('#pathC').getAttribute('d'),
+                pathD=	document.querySelector('#pathD').getAttribute('d'),
+                pathF=	document.querySelector('#pathF').getAttribute('d'),
+                pathE=	document.querySelector('#pathE').getAttribute('d');
+
+        var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d');
+
+        function renderCurve(context,points,color){
+            context.beginPath();
+            context.strokeStyle = color||'#666';
+            context.moveTo(points[0], points[1]);
+            context.bezierCurveTo(points[2], points[3], points[4], points[5], points[6], points[7]);
+            context.stroke();
+
+        }
+
+        function renderShapes(context,curves,color){
+            context.beginPath();
+            context.fillStyle = color||'#444';
+            context.moveTo(curves[0][0], curves[0][1]);
+            curves.forEach(function(points){
+                context.bezierCurveTo(points[2], points[3], points[4], points[5], points[6], points[7]);
+            });
+
+            context.closePath();
+            context.fill();
+        }
+
+        function toogleStroke() {
+            stroke = !stroke;
+            document.querySelector('#mode').innerHTML = stroke ? 'Fill' : 'Stroke'
+        }
+
+
+        function animate(arr,indexA,indexB){
+            pasition.animate({
+                from: arr[indexA],
+                to: arr[indexB],
+                time: 1000,
+                progress:function(shapes){
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    shapes.forEach(function(curves){
+                        if(stroke) {
+                            curves.forEach(function (curve) {
+                                renderCurve(context, curve, "#666")
+                            })
+                        }else{
+                            renderShapes(context,curves,"#000")
+                        }
+                    })
+                },
+                end:function(){
+                    setTimeout(function(){
+                        indexA++;
+                        indexB++;
+                        if(indexA===arr.length)indexA = 0;
+                        if(indexB===arr.length)indexB = 0;
+                        animate(arr,indexA,indexB)
+                    },1500)
+
+                }
+            })
+        }
+
+        var arr=[pathA,pathB,pathE,pathB,pathD,pathC,pathF,pathC,pathD,pathB,pathA];
+        animate(arr,0,1);
+    }
+    pa();
+
+</script>
+
+
+
+</body></html>
