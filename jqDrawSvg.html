@@ -46,15 +46,15 @@ function s1(){
         callback:function(){
             console.log("画好了");
         },
-        duration: 5000,//调节速度
+        duration: 1000,//调节速度
         easing: 'linear'//图片有用
     });
     mySvg.drawsvg('animate');
 
     //用法1 :animate
-//        setInterval(function(){
-//            mySvg.drawsvg('animate');
-//        },3500);
+       setInterval(function(){
+           mySvg.drawsvg('animate');
+        },3500);
 
 
     //用法2:progress
@@ -77,7 +77,7 @@ function s2(){
 
     $svg.drawsvg('animate');
 }
-s2();
+s1();
 </script>
 </body>
 </html>

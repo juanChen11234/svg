@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>two.js</title>
+</head>
+<body>
+<div id="can"></div>
+<div id="svg"></div>
+
+<script src="twoJs/two.js"></script>
+<script>
+function haha(){
+    var con=document.getElementById("can");
+
+    var two=new Two({
+        width:400,
+        height:400
+    }).appendTo(con);
+    var circle1 = two.makeCircle(72, 100, 50);
+    circle1.fill = '#FF8000';
+    circle1.noStroke();
+    var circle2 = two.makeCircle(100, 100, 50);
+    circle2.fill = 'rgb(0, 200, 255)';
+    circle2.noStroke();
+    circle2.opacity = 0.75;
+
+    var g=two.makeGroup(circle1,circle2);
+    g.translation.set(20, 100);
+
+
+    //two.update();
+    var scale= 1,dir=1;
+    two.frameCount=10;
+    two.timeDelta=8000;
+    two.bind('update', function(frameCount) {
+        // This code is called everytime two.update() is called.
+        // Effectively 60 times per second.
+        scale+=dir*0.1;
+        if(scale>=4){
+            dir=-1
+        }
+        if(scale<=0.5){
+            dir=1;
+        }
+        g.scale=scale;
+    }).play();  // Finally, start the animation loop
+
+
+
+}
+
+    haha();
+
+</script>
+</body>
+</html>
